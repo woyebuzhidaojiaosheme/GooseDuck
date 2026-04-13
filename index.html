@@ -732,7 +732,7 @@
           <span>PLAYER ROSTER</span>
           <h2>玩家阵容墙</h2>
         </div>
-        <p>以下头像素材全部来自当前 `img` 文件夹中非“轮播图”命名的图片，并以文件名作为玩家 ID 呈现，整体更适合鹅鸭杀手游主题页的组队展示。</p>
+        <p>以下头像素材全部来自当前页面同级目录中非“轮播图”命名的图片，并以文件名作为玩家 ID 呈现，整体更适合鹅鸭杀手游主题页的组队展示。</p>
       </div>
       <div class="roster-grid" id="playerGrid"></div>
     </section>
@@ -751,11 +751,11 @@
 
   <script>
     const slideData = [
-      { file: "./img/轮播图1.jpeg", tag: "NEON PARTY", title: "霓虹大厅就位，开局气氛直接拉满" },
-      { file: "./img/轮播图2.jpg", tag: "SUSPENSE SOCIAL", title: "身份暗流涌动，每次发言都像试探" },
-      { file: "./img/轮播图3.jpg", tag: "TRUST OR BETRAY", title: "组队、质疑、反投，局势一瞬翻盘" },
-      { file: "./img/轮播图4.jpg", tag: "MOBILE SHOWTIME", title: "新一轮视觉海报加入，舞台层次更饱满" },
-      { file: "./img/轮播图5.jpg", tag: "FINAL VOTE", title: "投票时刻来临，真相与谎言正面对撞" }
+      { file: "./轮播图1.jpeg", tag: "NEON PARTY", title: "霓虹大厅就位，开局气氛直接拉满" },
+      { file: "./轮播图2.jpg", tag: "SUSPENSE SOCIAL", title: "身份暗流涌动，每次发言都像试探" },
+      { file: "./轮播图3.jpg", tag: "TRUST OR BETRAY", title: "组队、质疑、反投，局势一瞬翻盘" },
+      { file: "./轮播图4.jpg", tag: "MOBILE SHOWTIME", title: "新一轮视觉海报加入，舞台层次更饱满" },
+      { file: "./轮播图5.jpg", tag: "FINAL VOTE", title: "投票时刻来临，真相与谎言正面对撞" }
     ];
 
     const playerData = [
@@ -779,7 +779,7 @@
       "尊贵的寒苏大王"
     ].map((name, index) => ({
       name,
-      file: `./img/${name}.jpg`,
+      file: `./${name}.jpg`,
       desc: [
         "擅长用轻描淡写的发言制造信息差，往往越低调越危险。",
         "节奏感很强，能在混乱局面里迅速抓住怀疑链的核心。",
