@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鹅鸭杀手游主题站</title>
+  <style>
+    :root {
+      --bg-1: #04101d;
+      --bg-2: #091b31;
+      --bg-3: #01050d;
+      --panel: rgba(8, 20, 42, 0.72);
+      --line: rgba(129, 226, 255, 0.18);
+      --cyan: #77f6ff;
+      --blue: #67a9ff;
+      --gold: #ffd36e;
+      --pink: #ff7eb6;
+      --white: #f5fbff;
+      --text: rgba(245, 251, 255, 0.78);
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--white);
+      font-family: "Trebuchet MS", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(119, 246, 255, 0.18), transparent 24%),
+        radial-gradient(circle at 86% 16%, rgba(255, 126, 182, 0.18), transparent 18%),
+        radial-gradient(circle at 50% 100%, rgba(103, 169, 255, 0.16), transparent 36%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 36%, var(--bg-3) 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(26px);
+      z-index: 0;
+      opacity: 0.75;
+    }
+
+    body::before {
+      width: 320px;
+      height: 320px;
+      left: -120px;
+      top: 60px;
+      background: radial-gradient(circle, rgba(119, 246, 255, 0.24), transparent 72%);
+      animation: drift 12s ease-in-out infinite;
+    }
+
+    body::after {
+      width: 380px;
+      height: 380px;
+      right: -130px;
+      bottom: 8%;
+      background: radial-gradient(circle, rgba(255, 126, 182, 0.18), transparent 72%);
+      animation: drift 14s ease-in-out infinite reverse;
+    }
+
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.56;
+      background-image:
+        radial-gradient(circle at 10% 30%, rgba(255,255,255,0.9) 0 1px, transparent 2px),
+        radial-gradient(circle at 28% 75%, rgba(119,246,255,0.9) 0 1px, transparent 2px),
+        radial-gradient(circle at 52% 12%, rgba(255,255,255,0.9) 0 1px, transparent 2px),
+        radial-gradient(circle at 72% 82%, rgba(255,211,110,0.85) 0 1px, transparent 2px),
+        radial-gradient(circle at 88% 44%, rgba(255,126,182,0.85) 0 1px, transparent 2px);
+      animation: starGlow 8s linear infinite;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      min-height: 100vh;
+      padding: 28px 24px 70px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-inner {
+      width: min(1280px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.04fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .hero-copy {
+      max-width: 610px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(119, 246, 255, 0.34);
+      background: rgba(6, 17, 36, 0.54);
+      box-shadow: inset 0 0 30px rgba(119, 246, 255, 0.08);
+      backdrop-filter: blur(10px);
+      color: var(--cyan);
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    .chip::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      box-shadow: 0 0 15px rgba(119, 246, 255, 0.9);
+    }
+
+    h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(42px, 7vw, 88px);
+      line-height: 0.94;
+      letter-spacing: 1px;
+    }
+
+    .title-accent {
+      display: block;
+      color: transparent;
+      background: linear-gradient(90deg, #ffffff 8%, var(--cyan) 40%, var(--gold) 88%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      color: var(--text);
+      line-height: 1.9;
+      font-size: 17px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      text-decoration: none;
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-weight: 800;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .btn-primary {
+      color: #171103;
+      background: linear-gradient(135deg, var(--gold), #ff9648);
+      box-shadow: 0 18px 38px rgba(255, 165, 75, 0.34);
+    }
+
+    .btn-secondary {
+      color: var(--white);
+      border: 1px solid rgba(119, 246, 255, 0.38);
+      background: rgba(7, 17, 36, 0.56);
+      box-shadow: inset 0 0 26px rgba(119, 246, 255, 0.07);
+    }
+
+    .stats {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 18px 16px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(16, 31, 61, 0.82), rgba(5, 10, 22, 0.75));
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: clamp(22px, 3vw, 34px);
+      color: var(--cyan);
+      margin-bottom: 6px;
+    }
+
+    .stat span {
+      font-size: 13px;
+      color: var(--text);
+      letter-spacing: 1px;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 700px;
+      perspective: 1700px;
+    }
+
+    .ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid rgba(119, 246, 255, 0.12);
+      box-shadow: 0 0 40px rgba(119, 246, 255, 0.05);
+      animation: spin 18s linear infinite;
+    }
+
+    .ring.one { width: 580px; height: 580px; }
+    .ring.two { width: 440px; height: 440px; animation-direction: reverse; animation-duration: 14s; }
+    .ring.three { width: 300px; height: 300px; animation-duration: 10s; }
+
+    .carousel-shell {
+      position: absolute;
+      inset: 50% 0 auto;
+      transform: translateY(-50%);
+      height: 620px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .carousel {
+      position: relative;
+      width: min(100%, 700px);
+      height: 600px;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateX(120px) scale(0.82) rotateY(-20deg);
+      transition: opacity 0.85s ease, transform 0.85s ease;
+      pointer-events: none;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0) scale(1) rotateY(0);
+      z-index: 3;
+    }
+
+    .slide.prev {
+      opacity: 0.36;
+      transform: translateX(-150px) scale(0.8) rotateY(22deg);
+      z-index: 2;
+    }
+
+    .slide.next {
+      opacity: 0.36;
+      transform: translateX(150px) scale(0.8) rotateY(-22deg);
+      z-index: 2;
+    }
+
+    .slide-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 18px;
+      border-radius: 34px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(147, 236, 255, 0.12), rgba(11, 20, 42, 0.06)),
+        rgba(4, 8, 18, 0.58);
+      border: 1px solid rgba(119, 246, 255, 0.24);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.48), inset 0 0 40px rgba(119, 246, 255, 0.06);
+      backdrop-filter: blur(14px);
+    }
+
+    .slide-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 24%, rgba(255,255,255,0.16) 45%, transparent 60%);
+      transform: translateX(-130%);
+      animation: shine 5.8s ease-in-out infinite;
+    }
+
+    .slide-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 24px;
+      filter: saturate(1.08) contrast(1.03);
+    }
+
+    .slide-info {
+      position: absolute;
+      left: 34px;
+      right: 34px;
+      bottom: 34px;
+      z-index: 2;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .slide-info small {
+      display: block;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .slide-info h3 {
+      margin: 0;
+      font-size: clamp(24px, 3.2vw, 34px);
+      line-height: 1.15;
+      text-shadow: 0 10px 20px rgba(0, 0, 0, 0.42);
+    }
+
+    .slide-no {
+      font-size: clamp(46px, 7vw, 96px);
+      line-height: 1;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.94);
+      text-shadow: 0 0 30px rgba(119, 246, 255, 0.36);
+    }
+
+    .carousel-controls {
+      position: absolute;
+      left: 50%;
+      bottom: -2px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 90%;
+    }
+
+    .dot {
+      width: 13px;
+      height: 13px;
+      border: 0;
+      border-radius: 50%;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 0 6px rgba(119, 246, 255, 0.05);
+      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .dot.active {
+      transform: scale(1.2);
+      background: linear-gradient(135deg, var(--cyan), var(--gold));
+      box-shadow: 0 0 0 8px rgba(119, 246, 255, 0.09), 0 0 20px rgba(119, 246, 255, 0.4);
+    }
+
+    .section {
+      width: min(1280px, calc(100% - 48px));
+      margin: 0 auto 42px;
+      padding: 34px;
+      border-radius: 32px;
+      background: linear-gradient(180deg, rgba(8, 20, 42, 0.76), rgba(4, 8, 19, 0.74));
+      border: 1px solid rgba(119, 246, 255, 0.16);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .section-head span {
+      display: block;
+      color: var(--cyan);
+      font-size: 12px;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 46px);
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 520px;
+      color: var(--text);
+      line-height: 1.85;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .feature-card {
+      min-height: 220px;
+      padding: 24px;
+      border-radius: 26px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(16, 34, 68, 0.9), rgba(8, 15, 33, 0.8));
+      border: 1px solid rgba(119, 246, 255, 0.12);
+    }
+
+    .feature-card::after {
+      content: "";
+      position: absolute;
+      right: -24px;
+      bottom: -40px;
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(119, 246, 255, 0.16), transparent 68%);
+    }
+
+    .feature-card strong {
+      display: inline-flex;
+      width: 56px;
+      height: 56px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 18px;
+      margin-bottom: 18px;
+      color: #0c1221;
+      background: linear-gradient(135deg, var(--cyan), var(--gold));
+      box-shadow: 0 14px 28px rgba(119, 246, 255, 0.2);
+    }
+
+    .feature-card h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--text);
+      line-height: 1.8;
+    }
+
+    .roster-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .player-card {
+      position: relative;
+      min-height: 330px;
+      border-radius: 28px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(14, 25, 51, 0.92), rgba(6, 10, 23, 0.9));
+      border: 1px solid rgba(119, 246, 255, 0.12);
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .player-card:hover {
+      transform: translateY(-8px) rotate(-0.5deg);
+      box-shadow: 0 36px 80px rgba(0, 0, 0, 0.42);
+    }
+
+    .player-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg, transparent 34%, rgba(2, 7, 17, 0.96) 100%);
+    }
+
+    .player-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.08);
+    }
+
+    .player-info {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      z-index: 2;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--gold);
+      background: rgba(255, 211, 110, 0.12);
+      border: 1px solid rgba(255, 211, 110, 0.3);
+    }
+
+    .player-info h3 {
+      margin: 0 0 6px;
+      font-size: 24px;
+    }
+
+    .player-info p {
+      margin: 0;
+      color: rgba(245, 251, 255, 0.76);
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    .cta {
+      padding: 24px 24px 96px;
+    }
+
+    .cta-panel {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: 42px 28px;
+      text-align: center;
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at top center, rgba(119, 246, 255, 0.12), transparent 55%),
+        linear-gradient(180deg, rgba(10, 24, 49, 0.92), rgba(4, 8, 19, 0.88));
+      border: 1px solid rgba(119, 246, 255, 0.18);
+      box-shadow: var(--shadow);
+    }
+
+    .cta-panel h2 {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 5vw, 54px);
+    }
+
+    .cta-panel p {
+      margin: 0 auto;
+      max-width: 660px;
+      color: var(--text);
+      line-height: 1.85;
+    }
+
+    .cta-panel .actions {
+      justify-content: center;
+      margin-top: 28px;
+    }
+
+    @keyframes shine {
+      0%, 20% { transform: translateX(-130%); }
+      55%, 100% { transform: translateX(160%); }
+    }
+
+    @keyframes spin {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50% { transform: translate3d(16px, -22px, 0); }
+    }
+
+    @keyframes starGlow {
+      0%, 100% { opacity: 0.46; transform: scale(1); }
+      50% { opacity: 0.68; transform: scale(1.02); }
+    }
+
+    @media (max-width: 1180px) {
+      .hero-inner,
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .roster-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .hero-visual {
+        min-height: 620px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .hero,
+      .cta {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .section {
+        width: min(100% - 24px, 1280px);
+        padding: 22px;
+        border-radius: 24px;
+      }
+
+      .stats,
+      .roster-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        min-height: 430px;
+      }
+
+      .carousel-shell {
+        height: 420px;
+      }
+
+      .carousel {
+        height: 390px;
+      }
+
+      .slide.prev,
+      .slide.next {
+        opacity: 0;
+      }
+
+      .ring.one { width: 330px; height: 330px; }
+      .ring.two { width: 250px; height: 250px; }
+      .ring.three { width: 180px; height: 180px; }
+
+      .player-card {
+        min-height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+  <div class="page">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <div class="chip">GOOSE GOOSE DUCK MOBILE</div>
+          <h1>
+            鹅鸭杀手游
+            <span class="title-accent">全员上桌，今晚谁在伪装？</span>
+          </h1>
+          <p>
+            结合你当前最新素材，页面升级成更完整的手游主题主站。首屏用多层 3D 轮播拉出派对氛围，玩家头像区则铺成阵容墙，让整个页面更像一张可互动的官网宣传页。
+          </p>
+          <div class="actions">
+            <a class="btn btn-primary" href="#carousel-showcase">进入主会场</a>
+            <a class="btn btn-secondary" href="#players">查看玩家阵容</a>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <strong>5</strong>
+              <span>主视觉轮播图</span>
+            </div>
+            <div class="stat">
+              <strong>18</strong>
+              <span>玩家头像档案</span>
+            </div>
+            <div class="stat">
+              <strong>Pure</strong>
+              <span>纯前端单页实现</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual" id="carousel-showcase">
+          <div class="ring one"></div>
+          <div class="ring two"></div>
+          <div class="ring three"></div>
+          <div class="carousel-shell">
+            <div class="carousel" id="carousel"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <span>GAMEPLAY HIGHLIGHTS</span>
+          <h2>手游感舞台，悬疑感拉满</h2>
+        </div>
+        <p>围绕鹅鸭杀的社交推理主题，页面使用霓虹灯效、玻璃拟态、星际背景和数字轮播，让首屏更有“上线活动页”的张力和节奏感。</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <strong>01</strong>
+          <h3>多图轮播主舞台</h3>
+          <p>新增的 5 张轮播图已经全部纳入，支持自动播放、手动切换和前后层级透视效果，视觉会比静态海报更有冲击力。</p>
+        </article>
+        <article class="feature-card">
+          <strong>02</strong>
+          <h3>玩家阵容完整展开</h3>
+          <p>最新头像素材全部进入角色墙，以图片名作为玩家 ID 展示，让页面自然形成组局大厅、战队名单和主播房间的感觉。</p>
+        </article>
+        <article class="feature-card">
+          <strong>03</strong>
+          <h3>后续继续扩展也轻松</h3>
+          <p>页面结构已经改成数据驱动方式，后面如果你再补充轮播图或头像，只需要继续扩展数组或让我再帮你刷新一版即可。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="players">
+      <div class="section-head">
+        <div>
+          <span>PLAYER ROSTER</span>
+          <h2>玩家阵容墙</h2>
+        </div>
+        <p>以下头像素材全部来自当前 `img` 文件夹中非“轮播图”命名的图片，并以文件名作为玩家 ID 呈现，整体更适合鹅鸭杀手游主题页的组队展示。</p>
+      </div>
+      <div class="roster-grid" id="playerGrid"></div>
+    </section>
+
+    <section class="cta">
+      <div class="cta-panel">
+        <h2>组好你的局，下一轮开始怀疑</h2>
+        <p>现在这版页面已经吃到你最新的图片资源。如果你还想继续往官网活动页方向推进，我也可以顺手给你补上下载区、阵营页签、开屏动画或音效入口。</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#carousel-showcase">回到轮播主舞台</a>
+          <a class="btn btn-secondary" href="#players">查看全部玩家</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const slideData = [
+      { file: "./img/轮播图1.jpeg", tag: "NEON PARTY", title: "霓虹大厅就位，开局气氛直接拉满" },
+      { file: "./img/轮播图2.jpg", tag: "SUSPENSE SOCIAL", title: "身份暗流涌动，每次发言都像试探" },
+      { file: "./img/轮播图3.jpg", tag: "TRUST OR BETRAY", title: "组队、质疑、反投，局势一瞬翻盘" },
+      { file: "./img/轮播图4.jpg", tag: "MOBILE SHOWTIME", title: "新一轮视觉海报加入，舞台层次更饱满" },
+      { file: "./img/轮播图5.jpg", tag: "FINAL VOTE", title: "投票时刻来临，真相与谎言正面对撞" }
+    ];
+
+    const playerData = [
+      "lululu",
+      "呆呆小羊羊",
+      "蛋黄芋泥包",
+      "脸蛋儿",
+      "六个柚子",
+      "咪饶",
+      "沐子麟",
+      "神奇海螺",
+      "是元宝不",
+      "疏语",
+      "吸一口榴莲",
+      "小小清楚",
+      "鸭鸭大将军",
+      "一颗小豆",
+      "鱼两条",
+      "炸油条",
+      "芝士抹茶大福",
+      "尊贵的寒苏大王"
+    ].map((name, index) => ({
+      name,
+      file: `./img/${name}.jpg`,
+      desc: [
+        "擅长用轻描淡写的发言制造信息差，往往越低调越危险。",
+        "节奏感很强，能在混乱局面里迅速抓住怀疑链的核心。",
+        "表面松弛，实则随时都可能在关键投票中完成反转。",
+        "任务路线清晰，观察细节敏锐，属于局内很难忽视的存在。",
+        "既能配合团队，也能独立判断，残局处理通常相当稳。"
+      ][index % 5]
+    }));
+
+    const carousel = document.getElementById("carousel");
+    const playerGrid = document.getElementById("playerGrid");
+
+    carousel.innerHTML = `
+      ${slideData.map((item, index) => `
+        <div class="slide ${index === 0 ? "active" : index === 1 ? "next" : index === slideData.length - 1 ? "prev" : ""}">
+          <div class="slide-card">
+            <img src="${item.file}" alt="轮播图${index + 1}">
+            <div class="slide-info">
+              <div>
+                <small>${item.tag}</small>
+                <h3>${item.title}</h3>
+              </div>
+              <div class="slide-no">${String(index + 1).padStart(2, "0")}</div>
+            </div>
+          </div>
+        </div>
+      `).join("")}
+      <div class="carousel-controls">
+        ${slideData.map((_, index) => `
+          <button class="dot ${index === 0 ? "active" : ""}" type="button" aria-label="切换到第${index + 1}张"></button>
+        `).join("")}
+      </div>
+    `;
+
+    playerGrid.innerHTML = playerData.map((player) => `
+      <article class="player-card">
+        <img src="${player.file}" alt="${player.name}">
+        <div class="player-info">
+          <div class="badge">PLAYER ID / ${player.name}</div>
+          <h3>${player.name}</h3>
+          <p>${player.desc}</p>
+        </div>
+      </article>
+    `).join("");
+
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const dots = Array.from(document.querySelectorAll(".dot"));
+    let current = 0;
+    let timer = null;
+
+    function renderSlides(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.remove("active", "prev", "next");
+        if (i === index) {
+          slide.classList.add("active");
+        } else if (i === (index - 1 + slides.length) % slides.length) {
+          slide.classList.add("prev");
+        } else if (i === (index + 1) % slides.length) {
+          slide.classList.add("next");
+        }
+      });
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === index);
+      });
+    }
+
+    function goToSlide(index) {
+      current = (index + slides.length) % slides.length;
+      renderSlides(current);
+    }
+
+    function startAutoPlay() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        goToSlide(current + 1);
+      }, 3600);
+    }
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", () => {
+        goToSlide(index);
+        startAutoPlay();
+      });
+    });
+
+    renderSlides(current);
+    startAutoPlay();
+  </script>
+</body>
+</html>
